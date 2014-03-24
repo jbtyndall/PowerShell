@@ -29,6 +29,9 @@
     Get-ScriptConfig "C:\MyConfig.xml"
 
     This command attempts to load the "C:\MyConfig.xml" configuration file.
+
+    .LINK
+    http://www.ityndall.com/scripting/using-configuration-files-powershell
 #>
 param(
     [Parameter(Mandatory=$False, HelpMessage="The full path to the config file.")] [string]$ConfigFilePath=".\script.config"
@@ -40,7 +43,7 @@ If(-not(Test-Path $ConfigFilePath)){
 
 [xml]$ScriptConfigXML = Get-Content $ConfigFilePath
 
-$ScriptConfig = @{}
+$ScriptConfig = [ordered]@{}
 
 #add startup configuration
 If($ScriptConfigXML.configuration.startup.HasChildNodes){
@@ -50,6 +53,6 @@ If($ScriptConfigXML.configuration.startup.HasChildNodes){
 #add script settings configuration
 If($ScriptConfigXML.configuration.scriptSettings.HasChildNodes){
     $ScriptConfigXML.configuration.scriptSettings.setting | foreach{$ScriptConfig[$_.Name] = $_.Value -as $_.serializeAs}
-}
+}#End If
 
 $ScriptConfig
